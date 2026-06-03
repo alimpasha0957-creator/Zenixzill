@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment — ZenixZill</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem; }
+    .pay-wrap { width: 100%; max-width: 480px; }
+    .pay-logo { text-align: center; margin-bottom: 2rem; }
+    .pay-logo a { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.5rem; }
+    .pay-logo span { color: var(--accent); }
+
+    .pay-box { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; }
+    .pay-header { text-align: center; margin-bottom: 1.5rem; }
+    .pay-header h2 { font-size: 1.4rem; margin-bottom: 0.3rem; }
+    .pay-header p { color: var(--text-muted); font-size: 0.9rem; }
+
+    .price-tag {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      background: rgba(200,240,74,0.08); border: 1px solid rgba(200,240,74,0.2);
+      border-radius: var(--radius-sm); padding: 1rem; margin-bottom: 1.5rem; text-align: center;
+    }
+    .price-tag .amount { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; color: var(--accent); }
+    .price-tag .what { font-size: 0.82rem; color: var(--text-muted); }
+
+    .qr-section { text-align: center; margin-bottom: 1.5rem; }
+    .qr-box {
+      display: inline-flex; align-items: center; justify-content: center;
+      background: white; border-radius: var(--radius); padding: 14px;
+      width: 200px; height: 200px; margin-bottom: 1rem;
+    }
+    .qr-box img { width: 100%; height: 100%; object-fit: contain; }
+    .qr-placeholder {
+      width: 172px; height: 172px; background: #f0f0f0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      font-size: 0.7rem; color: #999; text-align: center; gap: 6px; border-radius: 4px;
+    }
+    .qr-placeholder .icon { font-size: 2rem; }
+
+    .upi-row {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 0.7rem 1rem;
+      margin-bottom: 1.5rem; cursor: pointer;
+    }
+    .upi-row .upi-id { flex: 1; font-size: 0.9rem; font-family: monospace; color: var(--text); }
+    .upi-row .copy-btn { font-size: 0.78rem; color: var(--accent); white-space: nowrap; font-weight: 500; }
+
+    .steps-list { margin-bottom: 1.5rem; }
+    .steps-list .step {
+      display: flex; gap: 10px; align-items: flex-start;
+      padding: 0.6rem 0; border-bottom: 1px solid var(--border);
+    }
+    .steps-list .step:last-child { border-bottom: none; }
+    .step-dot {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: rgba(200,240,74,0.1); border: 1px solid rgba(200,240,74,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.65rem; color: var(--accent); flex-shrink: 0; margin-top: 1px;
+    }
+    .step-text { font-size: 0.88rem; color: var(--text-muted); line-height: 1.4; }
+    .step-text strong { color: var(--text); }
+
+    .confirm-section { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1.2rem; }
+    .confirm-section h4 { font-size: 0.9rem; margin-bottom: 0.8rem; }
+    .confirm-section p { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1rem; }
+    .btn-full { width: 100%; justify-content: center; padding: 0.8rem; font-size: 0.95rem; }
+
+    .logout-link { text-align: center; margin-top: 1rem; font-size: 0.82rem; color: var(--text-dim); }
+    .logout-link a { color: var(--text-muted); cursor: pointer; }
+    .logout-link a:hover { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+<div style="position:fixed;top:-100px;left:50%;transform:translateX(-50%);width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(200,240,74,0.05) 0%,transparent 70%);pointer-events:none;"></div>
+
+<div class="pay-wrap">
+  <div class="pay-logo">
+    <a href="index.html">Zenix<span>Zill</span></a>
+  </div>
+
+  <div class="pay-box">
+    <div class="pay-header">
+      <h2>Complete Your Payment</h2>
+      <p>One-time payment · Lifetime access to all methods</p>
+    </div>
+
+    <div class="price-tag">
+      <div>
+        <div class="amount">₹299</div>
+        <div class="what">All 6 Methods · Forever</div>
+      </div>
+    </div>
+
+    <!-- QR CODE SECTION -->
+    <div class="qr-section">
+      <div class="qr-box">
+        <!-- 
+          AAPKA QR CODE YAHAN LAGAO:
+          <img src="qr.png" alt="UPI QR Code" />
+          
+          Abhi placeholder hai. Apni QR image ko "qr.png" naam dekar
+          isi folder mein rakh do, phir upar wali img tag uncomment kar do.
+        -->
+        <div class="qr-placeholder">
+          <div class="icon">📱</div>
+          <div>Apni QR image<br/><strong>qr.png</strong><br/>is folder mein rakho</div>
+        </div>
+      </div>
+      <p style="font-size:0.82rem;color:var(--text-muted);">Scan with any UPI app · PhonePe, GPay, Paytm</p>
+    </div>
+
+    <!-- UPI ID -->
+    <div class="upi-row" onclick="copyText('alimturki10-1@okaxis')">
+      <span style="font-size:0.78rem;color:var(--text-muted);">UPI ID:</span>
+      <span class="upi-id">alimturki10-1@okaxis</span>
+      <span class="copy-btn">Copy</span>
+    </div>
+
+    <!-- STEPS -->
+    <div class="steps-list">
+      <div class="step">
+        <div class="step-dot">1</div>
+        <div class="step-text"><strong>Scan QR or copy UPI ID</strong> and send ₹299</div>
+      </div>
+      <div class="step">
+        <div class="step-dot">2</div>
+        <div class="step-text"><strong>Note your UTR/Transaction ID</strong> from your UPI app</div>
+      </div>
+      <div class="step">
+        <div class="step-dot">3</div>
+        <div class="step-text"><strong>Enter it below</strong> to confirm your payment</div>
+      </div>
+    </div>
+
+    <!-- CONFIRM FORM -->
+    <div class="confirm-section">
+      <h4>✅ Confirm Payment</h4>
+      <p>Enter your UPI Transaction ID / UTR Number to unlock access instantly.</p>
+      <div class="form-group">
+        <label>Transaction ID / UTR Number</label>
+        <input type="text" id="utr-input" placeholder="e.g. 425123456789" />
+      </div>
+      <div class="form-group">
+        <label>Amount Paid</label>
+        <input type="text" id="amount-input" placeholder="299" value="299" />
+      </div>
+      <button class="btn btn-primary btn-full" onclick="confirmPayment()">Confirm & Unlock Access →</button>
+    </div>
+  </div>
+
+  <div class="logout-link">
+    Logged in as <span id="user-email"></span> · <a onclick="logout()">Logout</a>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+<script src="app.js"></script>
+<script>
+  // Auth check
+  const user = requireAuth();
+  if (user) {
+    document.getElementById('user-email').textContent = user.email;
+    if (user.paid) window.location.href = 'dashboard.html';
+  }
+
+  function confirmPayment() {
+    const utr = document.getElementById('utr-input').value.trim();
+    const amount = document.getElementById('amount-input').value.trim();
+
+    if (!utr || utr.length < 6) {
+      return showToast('Please enter a valid Transaction ID', 'error');
+    }
+    if (amount !== '299') {
+      return showToast('Amount should be ₹299', 'error');
+    }
+
+    // Mark user as paid
+    const users = getUsers();
+    const uid = localStorage.getItem('zz_current');
+    users[uid].paid = true;
+    users[uid].utr = utr;
+    users[uid].paidAt = Date.now();
+    saveUsers(users);
+
+    showToast('Payment confirmed! 🎉 Unlocking access...');
+    setTimeout(() => window.location.href = 'dashboard.html', 1200);
+  }
+</script>
+</body>
+</html>

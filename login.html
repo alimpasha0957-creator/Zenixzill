@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — ZenixZill</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem; }
+    .auth-wrap { width: 100%; max-width: 420px; }
+    .auth-logo { text-align: center; margin-bottom: 2rem; }
+    .auth-logo a { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.5rem; }
+    .auth-logo span { color: var(--accent); }
+    .auth-box { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; }
+    .auth-tabs { display: flex; gap: 0; margin-bottom: 1.8rem; background: var(--bg3); border-radius: var(--radius-sm); padding: 4px; }
+    .auth-tab {
+      flex: 1; text-align: center; padding: 0.55rem;
+      border-radius: 6px; font-size: 0.9rem; cursor: pointer;
+      color: var(--text-muted); transition: all 0.2s; font-weight: 500; border: none; background: none;
+    }
+    .auth-tab.active { background: var(--bg); color: var(--text); }
+    .auth-form { display: none; }
+    .auth-form.active { display: block; }
+    .auth-footer { text-align: center; margin-top: 1.2rem; font-size: 0.85rem; color: var(--text-muted); }
+    .auth-footer a { color: var(--accent); }
+    .btn-full { width: 100%; justify-content: center; padding: 0.8rem; font-size: 0.95rem; margin-top: 0.5rem; }
+    .back-link { text-align: center; margin-bottom: 1.5rem; }
+    .back-link a { font-size: 0.85rem; color: var(--text-muted); }
+    .back-link a:hover { color: var(--accent); }
+    .glow { top: -100px; left: 50%; transform: translateX(-50%); }
+  </style>
+</head>
+<body>
+<div class="glow" style="position:fixed;top:-100px;left:50%;transform:translateX(-50%);width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(200,240,74,0.06) 0%,transparent 70%);pointer-events:none;"></div>
+
+<div class="auth-wrap">
+  <div class="auth-logo">
+    <a href="index.html">Zenix<span>Zill</span></a>
+  </div>
+  <div class="back-link"><a href="index.html">← Back to home</a></div>
+
+  <div class="auth-box">
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchTab('login')">Login</button>
+      <button class="auth-tab" onclick="switchTab('signup')">Sign Up</button>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div class="auth-form active" id="form-login">
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="login-email" placeholder="you@email.com" />
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="login-pass" placeholder="••••••••" />
+      </div>
+      <button class="btn btn-primary btn-full" onclick="doLogin()">Login →</button>
+      <div class="auth-footer">
+        Don't have an account? <a href="#" onclick="switchTab('signup')">Sign up</a>
+      </div>
+    </div>
+
+    <!-- SIGNUP FORM -->
+    <div class="auth-form" id="form-signup">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="signup-name" placeholder="Your name" />
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="signup-email" placeholder="you@email.com" />
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="signup-pass" placeholder="Min. 6 characters" />
+      </div>
+      <button class="btn btn-primary btn-full" onclick="doSignup()">Create Account →</button>
+      <div class="auth-footer">
+        Already have an account? <a href="#" onclick="switchTab('login')">Login</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+<script src="app.js"></script>
+<script>
+  // Check if already logged in
+  const existing = getCurrentUser();
+  if (existing) {
+    window.location.href = existing.paid ? 'dashboard.html' : 'payment.html';
+  }
+
+  // Check URL param for tab
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('tab') === 'signup') switchTab('signup');
+
+  function switchTab(tab) {
+    document.querySelectorAll('.auth-tab').forEach((t, i) => {
+      t.classList.toggle('active', (tab === 'login' && i === 0) || (tab === 'signup' && i === 1));
+    });
+    document.getElementById('form-login').classList.toggle('active', tab === 'login');
+    document.getElementById('form-signup').classList.toggle('active', tab === 'signup');
+  }
+
+  function doLogin() {
+    const email = document.getElementById('login-email').value.trim();
+    const pass = document.getElementById('login-pass').value;
+    if (!email || !pass) return showToast('Please fill all fields', 'error');
+
+    const users = getUsers();
+    const uid = btoa(email);
+    const user = users[uid];
+
+    if (!user || user.password !== btoa(pass)) {
+      return showToast('Invalid email or password', 'error');
+    }
+
+    localStorage.setItem('zz_current', uid);
+    showToast('Welcome back, ' + user.name + '!');
+    setTimeout(() => {
+      window.location.href = user.paid ? 'dashboard.html' : 'payment.html';
+    }, 800);
+  }
+
+  function doSignup() {
+    const name = document.getElementById('signup-name').value.trim();
+    const email = document.getElementById('signup-email').value.trim();
+    const pass = document.getElementById('signup-pass').value;
+
+    if (!name || !email || !pass) return showToast('Please fill all fields', 'error');
+    if (pass.length < 6) return showToast('Password must be 6+ characters', 'error');
+    if (!email.includes('@')) return showToast('Enter a valid email', 'error');
+
+    const users = getUsers();
+    const uid = btoa(email);
+
+    if (users[uid]) return showToast('Email already registered', 'error');
+
+    users[uid] = { name, email, password: btoa(pass), paid: false, joinedAt: Date.now() };
+    saveUsers(users);
+    localStorage.setItem('zz_current', uid);
+    showToast('Account created! 🎉');
+    setTimeout(() => window.location.href = 'payment.html', 800);
+  }
+</script>
+</body>
+</html>
